@@ -12,6 +12,7 @@ namespace Gestion_de_productos.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class UsuariosController : ControllerBase
     {
         private readonly PruebasContext _context;
@@ -23,7 +24,6 @@ namespace Gestion_de_productos.Controllers
 
         // GET: api/Usuarios
         [HttpGet]
-        [Authorize(Roles ="user")]
         public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
         {
             return await _context.Usuarios.ToListAsync();
@@ -44,10 +44,14 @@ namespace Gestion_de_productos.Controllers
         }
 
         // PUT: api/Usuarios/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUsuario(int id, Usuario usuario)
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchUsuario(int id, Usuario usuario)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             if (id != usuario.IdUsuario)
             {
                 return BadRequest();
@@ -72,17 +76,6 @@ namespace Gestion_de_productos.Controllers
             }
 
             return NoContent();
-        }
-
-        // POST: api/Usuarios
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Usuario>> PostUsuario(Usuario usuario)
-        {
-            _context.Usuarios.Add(usuario);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetUsuario", new { id = usuario.IdUsuario }, usuario);
         }
 
         // DELETE: api/Usuarios/5

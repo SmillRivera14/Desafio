@@ -1,14 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Gestion_de_productos.Models;
 using Microsoft.EntityFrameworkCore;
+using Gestion_de_productos.Jwt;
+using Microsoft.Extensions.Configuration;
+using System.Linq;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 
 namespace Gestion_de_productos.Controllers
 {
@@ -18,17 +19,18 @@ namespace Gestion_de_productos.Controllers
     {
         private readonly PruebasContext _context;
         private readonly IConfiguration _configuration;
+        private readonly JwtServices _jwtServices;
 
-        public AutenticationController(PruebasContext context, IConfiguration configuration)
+        public AutenticationController(PruebasContext context, IConfiguration configuration, JwtServices jwtServices)
         {
             _context = context;
             _configuration = configuration;
+            _jwtServices = jwtServices;
         }
 
         [HttpPost("registrar")]
         public async Task<ActionResult<Usuario>> Registrar(Usuario request)
         {
-            // Verificar si el nombre de usuario ya existe
             var existingUser = await _context.Usuarios.FirstOrDefaultAsync(u => u.Nombre == request.Nombre);
             if (existingUser != null)
             {
@@ -42,13 +44,13 @@ namespace Gestion_de_productos.Controllers
                 Nombre = request.Nombre,
                 HashContraseña = passwordHash,
                 Email = request.Email,
-                Rol = request.Rol 
+                Rol = request.Rol
             };
 
             _context.Usuarios.Add(user);
             await _context.SaveChangesAsync();
 
-            return Ok(user);
+            return Ok(new {message = "Usuario registrado existosamente"});
         }
 
         [HttpPost("login")]
@@ -60,30 +62,51 @@ namespace Gestion_de_productos.Controllers
                 return BadRequest("Usuario o contraseña incorrecta/o");
             }
 
-            string token = CreateToken(user);
+            var jwt = _jwtServices.Generate(user.IdUsuario, user.Nombre, user.Rol);
 
-            return Ok(token);
+            Response.Cookies.Append("jwt", jwt, new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTime.UtcNow.AddDays(1),
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                IsEssential = true
+            });
+
+            return Ok(new { message = "Success" });
         }
 
-        private string CreateToken(Usuario user)
+        [HttpGet("user")]
+        public IActionResult User()
         {
-            List<Claim> claims = new List<Claim>
+            try
             {
-                new Claim(JwtRegisteredClaimNames.Name, user.Nombre),
-                new Claim("role", $"{user.Rol}")
-            };
+                if (!Request.Cookies.TryGetValue("jwt", out var jwt))
+                {
+                    return Unauthorized("No JWT token found in cookies");
+                }
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:Token"]));
+                var token = _jwtServices.Verify(jwt);
 
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
+                var claims = token.Claims.ToList();
 
-            var token = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(60),
-                signingCredentials: creds
-            );
+                var userData = new
+                {
+                    Nombre = claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Name)?.Value,
+                    Rol = claims.FirstOrDefault(c => c.Type == "role")?.Value,
+                    Id = claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub)?.Value
+                };
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+                return Ok(userData);
+            }
+            catch (SecurityTokenException ex)
+            {
+                return Unauthorized($"Token verification failed: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized($"An error occurred: {ex.Message}");
+            }
         }
     }
 }
