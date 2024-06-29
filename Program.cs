@@ -1,18 +1,38 @@
+using Gestion_de_productos.Jwt;
 using Gestion_de_productos.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddScoped<JwtServices>();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Gestion de productos" });
+});
 
-//contexto
+// Contexto de base de datos
 var connectionString = builder.Configuration.GetConnectionString("AppConnection");
-builder.Services.AddDbContext<PruebasContext>(op => op.UseSqlServer(connectionString));
+builder.Services.AddDbContext<PruebasContext>(options =>
+    options.UseSqlServer(connectionString));
+
+// Configuración de CORS 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins", builder =>
+    {
+        builder.WithOrigins("http://localhost:3000", "http://localhost:5173", "http://localhost:1536", "http://localhost:5174")
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .AllowCredentials();
+    });
+});
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -24,6 +44,16 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Habilitar política de cookies
+app.UseCookiePolicy(new CookiePolicyOptions
+{
+    MinimumSameSitePolicy = SameSiteMode.None,
+    HttpOnly = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy.Always,
+    Secure = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always,
+});
+
+app.UseCors("AllowAllOrigins");
 
 app.UseAuthorization();
 

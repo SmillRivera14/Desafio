@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,7 +28,9 @@ public partial class PruebasContext : DbContext
         {
             entity.HasKey(e => e.IdProducto).HasName("PK_id_productos");
 
-            entity.Property(e => e.IdProducto).HasColumnName("ID_producto");
+            entity.Property(e => e.IdProducto)
+            .ValueGeneratedOnAdd()
+            .HasColumnName("ID_producto");
             entity.Property(e => e.FechaCreacion)
                 .HasColumnType("datetime")
                 .HasColumnName("Fecha_Creacion");
@@ -43,8 +45,10 @@ public partial class PruebasContext : DbContext
         {
             entity.HasKey(e => e.IdUsuario).HasName("PK_id_usuarios");
 
-            entity.Property(e => e.IdUsuario).HasColumnName("ID_usuario");
-            entity.Property(e => e.Contraseña).HasMaxLength(100);
+            entity.Property(e => e.IdUsuario)
+            .ValueGeneratedOnAdd()
+            .HasColumnName("ID_usuario");
+            entity.Property(e => e.HashContraseña).HasMaxLength(100);
             entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.Nombre).HasMaxLength(100);
             entity.Property(e => e.Rol).HasMaxLength(6);

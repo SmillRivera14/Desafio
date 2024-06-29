@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Gestion_de_productos.Models;
 
 public partial class Producto
 {
+    [BindNever]
     public int IdProducto { get; set; }
 
     public string Nombre { get; set; } = null!;
