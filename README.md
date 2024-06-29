@@ -1,5 +1,3 @@
-Para crear un archivo README.md con el contenido del OpenAPI especificado, puedes seguir este formato:
-
 ```markdown
 # Gestion de productos API
 
@@ -256,5 +254,3 @@ Elimina un usuario existente por su ID.
   - `204 No Content` Si se elimina correctamente el usuario.
   - Otros códigos de respuesta posibles en caso de errores.
 ```
-
-Este formato estructurado y detallado ayudará a los desarrolladores y usuarios a entender rápidamente cómo interactuar con tu API. Asegúrate de ajustar los detalles según las necesidades específicas de tu proyecto.
