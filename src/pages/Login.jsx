@@ -1,4 +1,6 @@
+// Login.jsx
 import React, { useState } from "react";
+import styles from "../Login.module.css"; // Importar estilos de CSS Modules
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -27,7 +29,7 @@ const Login = () => {
 
       if (response.ok) {
         console.log('Login successful');
-        navigate('/'); 
+        navigate('/products'); 
       } else {
         const errorData = await response.json();
         console.error('Error al iniciar sesión:', errorData);
@@ -40,28 +42,30 @@ const Login = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h1 className="h3 mb-3 fw-normal">Inicia sesión</h1>
-      <input
-        type="text"
-        name="nombre"
-        className="form-control"
-        placeholder="Nombre"
-        value={formData.nombre}
-        onChange={handleChange}
-      />
+    <div className={styles.loginContainer}>
+      <form className={styles.formSignin} onSubmit={handleSubmit}>
+        <h1 className={styles.formTitle}>Inicia sesión</h1>
+        <input
+          type="text"
+          name="nombre"
+          className={styles.formControl}
+          placeholder="Nombre"
+          value={formData.nombre}
+          onChange={handleChange}
+        />
 
-      <input
-        type="password"
-        name="HashContraseña"
-        className="form-control"
-        placeholder="Contraseña"
-        value={formData.HashContraseña}
-        onChange={handleChange}
-      />
+        <input
+          type="password"
+          name="HashContraseña"
+          className={styles.formControl}
+          placeholder="Contraseña"
+          value={formData.HashContraseña}
+          onChange={handleChange}
+        />
 
-      <button className="w-100 btn btn-lg btn-primary" type="submit">Iniciar sesión</button>
-    </form>
+        <button className={styles.submitButton} type="submit">Iniciar sesión</button>
+      </form>
+    </div>
   );
 };
 

@@ -1,24 +1,30 @@
+// Nav.jsx
 import React from "react";
 import { Link } from "react-router-dom";
+import styles from "./Nav.module.css"; // Importar estilos de CSS Modules
 
 const Nav = () => {
   return (
-    <nav className="navbar navbar-expand-md navbar-dark bg-dark mb-4">
-      <div className="container-fluid">
-        <Link className="navbar-brand" to="." >Home</Link>
+    <nav className={styles.navbar}>
+      <div className={styles.container}>
+        <Link className={styles.navbarBrand} to=".">Home</Link>
 
-        <div className="collapse navbar-collapse">
-          <ul className="navbar-nav me-auto mb-2 mb-md-0">
-            <li className="nav-item">
-              <Link className="nav-link active" to="/login">Login</Link>
+        <div className={styles.navCollapse}>
+          <ul className={styles.navbarNav}>
+            <li className={styles.navItem}>
+              <Link className={styles.navLink} to="/login">Login</Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link active" to="/register">Registro</Link>
+            <li className={styles.navItem}>
+              <Link className={styles.navLink} to="/register">Registro</Link>
+            </li>
+            <li className={styles.navItem}>
+              <Link className={styles.navLink} to="/products">Products</Link>
             </li>
           </ul>
         </div>
       </div>
     </nav>
-  )
-}
+  );
+};
+
 export default Nav;
