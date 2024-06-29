@@ -12,7 +12,6 @@ namespace Gestion_de_productos.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "admin,user")]
     public class ProductosController : ControllerBase
     {
         private readonly PruebasContext _context;

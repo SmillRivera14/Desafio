@@ -54,7 +54,7 @@ namespace Gestion_de_productos.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(UsuariosDTO request)
+        public async Task<ActionResult<string>> Login(LoginDTO request)
         {
             var user = _context.Usuarios.SingleOrDefault(u => u.Nombre == request.Nombre);
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.HashContraseña, user.HashContraseña))

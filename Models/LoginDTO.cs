@@ -1,6 +1,6 @@
 ﻿namespace Gestion_de_productos.Models
 {
-    public class UsuariosDTO
+    public class LoginDTO
     {
         public required string Nombre { get; set; }
 
