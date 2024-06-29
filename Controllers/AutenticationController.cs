@@ -1,15 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Gestion_de_productos.Models;
 using Microsoft.EntityFrameworkCore;
-using Gestion_de_productos.Jwt;
 using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System;
+using Microsoft.AspNetCore.Http;
+using Gestion_de_productos.Jwt;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
+using System.Text;
 
 namespace Gestion_de_productos.Controllers
 {
@@ -50,7 +51,7 @@ namespace Gestion_de_productos.Controllers
             _context.Usuarios.Add(user);
             await _context.SaveChangesAsync();
 
-            return Ok(new {message = "Usuario registrado existosamente"});
+            return Ok(new { message = "Usuario registrado existosamente" });
         }
 
         [HttpPost("login")]

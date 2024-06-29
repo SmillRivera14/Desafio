@@ -20,7 +20,7 @@ var connectionString = builder.Configuration.GetConnectionString("AppConnection"
 builder.Services.AddDbContext<PruebasContext>(options =>
     options.UseSqlServer(connectionString));
 
-// Configuración de CORS 
+// ConfiguraciÃ³n de CORS 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins", builder =>
@@ -45,7 +45,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Habilitar política de cookies
+// Habilitar polÃ­tica de cookies
 app.UseCookiePolicy(new CookiePolicyOptions
 {
     MinimumSameSitePolicy = SameSiteMode.None,
