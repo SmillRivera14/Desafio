@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import styles from "../Login.module.css"; // Importa estilos usando CSS Modules
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -42,46 +43,48 @@ const Register = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h1 className="h3 mb-3 fw-normal">Registrarse</h1>
-      <input
-        type="text"
-        name="nombre"
-        className="form-control"
-        placeholder="Nombre"
-        value={formData.nombre}
-        onChange={handleChange}
-      />
+    <div className={styles.loginContainer}>
+      <form className={styles.formSignin} onSubmit={handleSubmit}>
+        <h1 className={styles.formTitle}>Registrarse</h1>
+        <input
+          type="text"
+          name="nombre"
+          className={styles.formControl}
+          placeholder="Nombre"
+          value={formData.nombre}
+          onChange={handleChange}
+        />
 
-      <input
-        type="email"
-        name="email"
-        className="form-control"
-        placeholder="name@example.com"
-        value={formData.email}
-        onChange={handleChange}
-      />
+        <input
+          type="text"
+          name="rol"
+          className={styles.formControl}
+          placeholder="Rol"
+          value={formData.rol}
+          onChange={handleChange}
+        />
 
-      <input
-        type="text"
-        name="rol"
-        className="form-control"
-        placeholder="Rol"
-        value={formData.rol}
-        onChange={handleChange}
-      />
+        <input
+          type="email"
+          name="email"
+          className={styles.formControl}
+          placeholder="name@example.com"
+          value={formData.email}
+          onChange={handleChange}
+        />
 
-      <input
-        type="password"
-        name="hashContraseña"
-        className="form-control"
-        placeholder="Password"
-        value={formData.hashContraseña}
-        onChange={handleChange}
-      />
+        <input
+          type="password"
+          name="hashContraseña"
+          className={styles.formControl}
+          placeholder="Password"
+          value={formData.hashContraseña}
+          onChange={handleChange}
+        />
 
-      <button className="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
-    </form>
+        <button className={styles.submitButton} type="submit">Submit</button>
+      </form>
+    </div>
   );
 };
 

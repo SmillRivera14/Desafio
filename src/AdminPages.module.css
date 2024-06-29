@@ -1,3 +1,5 @@
+/* AdminPages.module.css */
+
 :root {
   --background-light: #dcdcdc;
   --color-light: #333;
@@ -29,6 +31,12 @@ body {
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 16px;
   padding: 60px 96px;
+}
+
+.errorMessage {
+  color: red;
+  font-size: 16px;
+  margin-bottom: 10px;
 }
 
 .galleryView {
@@ -77,13 +85,27 @@ body {
   color: var(--color-secondary);
 }
 
-.productPrice,
-.productStock,
-.productCreatedAt,
-.productLastUpdated {
+.productPrice {
   margin: 5px 0;
   font-size: var(--font-size-tertiary);
   color: var(--color-tertiary);
+}
+
+.backButton {
+  background-color: var(--background-light);
+  color: var(--color-light);
+  border: 2px solid var(--color-light);
+  padding: 10px 20px;
+  font-size: var(--font-size-secondary);
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  margin-top: 20px;
+}
+
+.backButton:hover {
+  background-color: var(--background-dark);
+  color: var(--color-dark);
 }
 
 @media (max-width: 750px) {
@@ -138,21 +160,4 @@ body {
   .thumbnail {
     border-bottom: 1px solid var(--color-light);
   }
-}
-
-.backButton {
-  background-color: var(--background-light);
-  color: var(--color-light);
-  border: 2px solid var(--color-light);
-  padding: 10px 20px;
-  font-size: var(--font-size-secondary);
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
-  margin-top: 20px; /* Ajusta el margen según sea necesario */
-}
-
-.backButton:hover {
-  background-color: var(--background-dark);
-  color: var(--color-dark);
 }

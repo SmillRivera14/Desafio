@@ -5,6 +5,9 @@ import Nav from './componentes/Nav';
 import Register from './pages/Registro';
 import Home from './pages/Home';
 import Products from './pages/Products';
+import AdminPages from './pages/AdminPages';
+import Editar from './pages/Editar'
+
 
 function App() {
   return (
@@ -17,6 +20,8 @@ function App() {
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
             <Route path='/products' element={<Products />} />
+            <Route path='/adminpages' element={<AdminPages />} />
+            <Route path='/editar/:id' element={<Editar />} />
           </Routes>
         </main>
       </div>
