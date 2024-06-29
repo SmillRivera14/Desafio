@@ -29,16 +29,15 @@ const Register = () => {
       if (response.ok) {
         const content = await response.json();
         console.log(content);
-        // Aquí puedes manejar la respuesta según tus necesidades
-
-        // Navegación después del registro exitoso
         navigate('/login');
       } else {
-        console.error('Error al registrar:', response.statusText);
+        const errorData = await response.json();
+        console.error('Error al registrar:', errorData);
+        alert(`Error al registrar: ${errorData.title || response.statusText}`);
       }
     } catch (error) {
       console.error('Error al registrar:', error);
-      // Manejo de errores, como mostrar un mensaje al usuario
+      alert('Error al registrar. Por favor, intenta nuevamente.');
     }
   };
 

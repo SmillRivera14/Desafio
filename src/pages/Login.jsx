@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    nombre: "",                                                         
+    nombre: "",
     HashContraseña: ""
   });
   const navigate = useNavigate();
@@ -26,13 +26,16 @@ const Login = () => {
       });
 
       if (response.ok) {
+        console.log('Login successful');
         navigate('/'); 
       } else {
-        console.error('Error al iniciar sesión:', response.statusText);
+        const errorData = await response.json();
+        console.error('Error al iniciar sesión:', errorData);
+        alert(`Error al iniciar sesión: ${errorData.errors ? Object.values(errorData.errors).flat().join(', ') : response.statusText}`);
       }
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
-      // Manejo de errores, como mostrar un mensaje al usuario
+      alert('Error al iniciar sesión. Por favor, intenta nuevamente.');
     }
   };
 
