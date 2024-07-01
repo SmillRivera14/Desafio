@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import styles from '../Login.module.css'; // Importar los estilos CSS Modules
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+
+
 const Editar = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [usuario, setUsuario] = useState({
     nombre: '',
@@ -11,7 +14,7 @@ const Editar = () => {
     rol: ''
   });
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchUsuario = async () => {
       try {
@@ -30,7 +33,6 @@ const Editar = () => {
           }
         } else {
           console.error('Response not OK:', response.status, response.statusText);
-          setError(`Error al obtener usuario: ${response.statusText}`);
         }
       } catch (error) {
         console.error('Error fetching usuario:', error);
@@ -56,7 +58,7 @@ const Editar = () => {
       });
 
       if (response.ok) {
-        alert('Usuario actualizado correctamente')
+        alert('Usuario actualizado correctamente');
         navigate('/adminpages');
       } else {
         let errorData;
@@ -79,7 +81,6 @@ const Editar = () => {
     <div className={styles.loginContainer}>
       <form className={styles.formSignin} onSubmit={handleSubmit}>
         <h2 className={styles.formTitle}>Editar Usuario</h2>
-        {error && <div className={styles.errorMessage}>{error}</div>}
         <div className={styles.formGroup}>
           <label htmlFor="nombre">Nombre:</label>
           <input

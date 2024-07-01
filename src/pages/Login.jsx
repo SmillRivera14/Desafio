@@ -32,21 +32,22 @@ const Login = () => {
         navigate('/products');
       } else {
         let errorData;
+        const text = await response.text(); 
         try {
-          const text = await response.text(); 
           errorData = JSON.parse(text); 
         } catch (jsonError) {
           console.error('Error parsing JSON:', jsonError);
-          errorData = { message: await response.text() };
+          errorData = { message: text }; 
         }
         console.error('Error al iniciar sesión:', errorData);
         alert(`Error al iniciar sesión: ${errorData.errors ? Object.values(errorData.errors).flat().join(', ') : errorData.message}`);
       }
     } catch (error) {
       console.error('No se pudo conectar a la API', error);
-      alert('No se pudo conectar a la API ', error);
+      alert('No se pudo conectar a la API.');
     }
   };
+  
   
 
   return (

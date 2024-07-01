@@ -26,7 +26,7 @@ const Usuarios = ({ handleCardClick }) => {
           setError(errorData.message || "Error al cargar los usuarios.");
         }
       } catch (err) {
-        setError("Error al conectarse con la API");
+        setError("Error al conectar con la API");
       }
     };
 
@@ -53,8 +53,7 @@ const Usuarios = ({ handleCardClick }) => {
           const updatedUsuarios = usuarios.filter(
             (usuario) => usuario.idUsuario !== idUsuario
           );
-          setUsuarios(updatedUsuarios);
-          setDeleteSuccessMessage("¡Usuario eliminado con éxito!");
+          alert("¡Usuario eliminado con éxito!");
           setTimeout(() => {
             setDeleteSuccessMessage("");
           }, 3000); // Oculta el mensaje después de 3 segundos
