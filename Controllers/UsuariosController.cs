@@ -113,52 +113,44 @@ namespace Gestion_de_productos.Controllers
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> PatchUsuario(int id, Usuario usuario)
         {
+            if (id != usuario.IdUsuario)
+            {
+                return BadRequest("El ID del usuario no coincide.");
+            }
+
+            // Cifrar la contraseña si ha sido proporcionada
+            if (!string.IsNullOrEmpty(usuario.HashContraseña))
+            {
+                usuario.HashContraseña = BCrypt.Net.BCrypt.HashPassword(usuario.HashContraseña);
+            }
+
+            _context.Entry(usuario).State = EntityState.Modified;
+
             try
             {
-                if (!EsAdmin())
-                {
-                    return StatusCode(StatusCodes.Status403Forbidden, "You do not have permission to access this resource.");
-                }
-
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                if (id != usuario.IdUsuario)
-                {
-                    return BadRequest();
-                }
-
-                _context.Entry(usuario).State = EntityState.Modified;
-
-                try
-                {
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UsuarioExists(id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-
-                return NoContent();
+                await _context.SaveChangesAsync();
             }
-            catch (Exception e)
+            catch (DbUpdateConcurrencyException)
             {
-                return BadRequest($"Error: {e.Message}");
+                if (!UsuarioExists(id))
+                {
+                    return NotFound($"No se encontró el usuario con ID = {id}");
+                }
+                else
+                {
+                    return StatusCode(500, "Ocurrió un error al actualizar el usuario.");
+                }
             }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ocurrió un error al actualizar el usuario: {ex.Message}");
+            }
+
+            return NoContent();
         }
 
         // DELETE: api/Usuarios/5
