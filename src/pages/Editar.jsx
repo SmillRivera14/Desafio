@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import styles from '../Login.module.css'; // Importar los estilos CSS Modules
-
+import { useNavigate } from 'react-router-dom';
 const Editar = () => {
   const { id } = useParams();
   const [usuario, setUsuario] = useState({
@@ -10,16 +10,17 @@ const Editar = () => {
     email: '',
     rol: ''
   });
-
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchUsuario = async () => {
       try {
         const response = await fetch(`https://localhost:7047/api/Usuarios/${id}`, {
-          method: 'GET', 
+          method: 'GET',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
         });
-  
+
         if (response.ok) {
           const data = await response.json();
           if (data) {
@@ -29,15 +30,15 @@ const Editar = () => {
           }
         } else {
           console.error('Response not OK:', response.status, response.statusText);
+          setError(`Error al obtener usuario: ${response.statusText}`);
         }
       } catch (error) {
         console.error('Error fetching usuario:', error);
       }
     };
-  
+
     fetchUsuario();
   }, [id]);
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,18 +49,26 @@ const Editar = () => {
     e.preventDefault();
     try {
       const response = await fetch(`https://localhost:7047/api/Usuarios/${id}`, {
-        method: 'PATCH', 
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify(usuario)
       });
 
       if (response.ok) {
-        console.log(await response.json());
-        console.log('Usuario actualizado correctamente');
-        // Aquí podrías redirigir o mostrar un mensaje de éxito
+        alert('Usuario actualizado correctamente')
+        navigate('/adminpages');
       } else {
-        console.error('Error al actualizar el usuario');
+        let errorData;
+        try {
+          const text = await response.text();
+          errorData = JSON.parse(text);
+        } catch (jsonError) {
+          console.error('Error parsing JSON:', jsonError);
+          errorData = { message: await response.text() };
+        }
+        console.error('Error al actualizar usuario:', errorData);
+        alert(`Error al actualizar usuario: ${errorData.errors ? Object.values(errorData.errors).flat().join(', ') : errorData.message}`);
       }
     } catch (error) {
       console.error('Error en la conexión', error);
@@ -70,6 +79,7 @@ const Editar = () => {
     <div className={styles.loginContainer}>
       <form className={styles.formSignin} onSubmit={handleSubmit}>
         <h2 className={styles.formTitle}>Editar Usuario</h2>
+        {error && <div className={styles.errorMessage}>{error}</div>}
         <div className={styles.formGroup}>
           <label htmlFor="nombre">Nombre:</label>
           <input

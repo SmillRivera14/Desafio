@@ -21,7 +21,8 @@ const Home = () => {
           setError(errorText);
         }
       } catch (err) {
-        setError('An error occurred: ' + err.message);
+        setError('Fallo la conexión la API');
+        console.log(err)
       }
     };
 
@@ -33,7 +34,7 @@ const Home = () => {
       <div className={styles.neonText}>
         <span className={styles.neonSpan}>Bienvenido</span>
       </div >
-       <span className={styles.username}>{name ? <div> {name}</div> : error ? <div>Error: {error}</div> : <div>Debes iniciar sesión</div>}</span>
+       <span className={styles.username}>{name ? <div>{name}</div> : <div>Debes iniciar sesión</div>}</span>
     </div>
   );
 };

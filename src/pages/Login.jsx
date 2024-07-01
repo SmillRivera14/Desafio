@@ -26,20 +26,28 @@ const Login = () => {
         credentials: 'include',
         body: JSON.stringify(formData)
       });
-
+  
       if (response.ok) {
         console.log('Login successful');
-        navigate('/products'); 
+        navigate('/products');
       } else {
-        const errorData = await response.json();
+        let errorData;
+        try {
+          const text = await response.text(); 
+          errorData = JSON.parse(text); 
+        } catch (jsonError) {
+          console.error('Error parsing JSON:', jsonError);
+          errorData = { message: await response.text() };
+        }
         console.error('Error al iniciar sesión:', errorData);
-        alert(`Error al iniciar sesión: ${errorData.errors ? Object.values(errorData.errors).flat().join(', ') : response.statusText}`);
+        alert(`Error al iniciar sesión: ${errorData.errors ? Object.values(errorData.errors).flat().join(', ') : errorData.message}`);
       }
     } catch (error) {
-      console.error('Error al iniciar sesión:', error);
-      alert('Error al iniciar sesión. Por favor, intenta nuevamente.');
+      console.error('No se pudo conectar a la API', error);
+      alert('No se pudo conectar a la API ', error);
     }
   };
+  
 
   return (
     <div className={styles.loginContainer}>

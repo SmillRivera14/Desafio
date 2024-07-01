@@ -14,7 +14,6 @@ const Nav = () => {
     })
       .then(response => response.json())
       .then(data => {
-        console.log(data);
         setUserRole(data.rol); // Asigna el rol del usuario obtenido
       })
       .catch(error => {

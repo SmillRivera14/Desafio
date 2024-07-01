@@ -34,11 +34,10 @@ const Register = () => {
       } else {
         const errorData = await response.json();
         console.error('Error al registrar:', errorData);
-        alert(`Error al registrar: ${errorData.title || response.statusText}`);
+        alert(`${errorData.errors ? Object.values(errorData.errors).flat().join(', ') : errorData.message}`);
       }
     } catch (error) {
-      console.error('Error al registrar:', error);
-      alert('Error al registrar. Por favor, intenta nuevamente.');
+      alert('No se pudo conectar a la API');
     }
   };
 

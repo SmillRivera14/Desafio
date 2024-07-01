@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styles from '../AdminPages.module.css'; // Importa los estilos CSS modules
 
-
 const Usuarios = ({ handleCardClick }) => {
   const [usuarios, setUsuarios] = useState([]);
   const [error, setError] = useState("");
@@ -23,11 +22,11 @@ const Usuarios = ({ handleCardClick }) => {
           const data = await response.json();
           setUsuarios(data);
         } else {
-          const errorText = await response.text();
-          setError(errorText);
+          const errorData = await response.json();
+          setError(errorData.message || "Error al cargar los usuarios.");
         }
       } catch (err) {
-        setError("An error occurred: " + err.message);
+        setError("Error al conectarse con la API");
       }
     };
 
@@ -60,8 +59,8 @@ const Usuarios = ({ handleCardClick }) => {
             setDeleteSuccessMessage("");
           }, 3000); // Oculta el mensaje después de 3 segundos
         } else {
-          const errorText = await response.text();
-          setError(errorText);
+          const errorData = await response.json();
+          setError(errorData.message || "Error al eliminar el usuario.");
         }
       } catch (err) {
         setError("An error occurred: " + err.message);
